@@ -17,7 +17,7 @@ pipeline {
         stage('Send Notification') {
             steps {
                 script {
-                    def recipient = "developer@example.com"
+                    def recipient = "xyz@gmail.com"
                     def emailSubject = "Build Notification: ${env.JOB_NAME} - Build #${env.BUILD_NUMBER}"
                     def emailBody = "The build details can be found here: ${env.BUILD_URL}"         
                     try {
