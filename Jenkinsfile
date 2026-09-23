@@ -1,20 +1,33 @@
 pipeline {
-    agent any
+    agent any   
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
-            }}
+            }
+        }
+        
         stage('Build') {
             steps {
-                bat 'python3 -m py_compile app.py'
+                bat 'python -m py_compile app.py' 
                 sleep time: 15, unit: 'SECONDS'
-                milestone ordinal: 1
-            }}
+                milestone(1)
+            }
+        }
         stage('Send Notification') {
-            steps {          
-                echo "Notification"
-                echo "To: manikandanrenu3@gmail.com"
-                echo "Subject: Build ${env.JOB_NAME} #${env.BUILD_NUMBER}"
-                echo "Body: Build URL: ${env.BUILD_URL}"
-            }}}}
+            steps {
+                script {
+                    def recipient = "developer@example.com"
+                    def emailSubject = "Build Notification: ${env.JOB_NAME} - Build #${env.BUILD_NUMBER}"
+                    def emailBody = "The build details can be found here: ${env.BUILD_URL}"         
+                    try {
+                        mail to: recipient,
+                             subject: emailSubject,
+                             body: emailBody
+                    } catch (Exception e) {
+                        echo "--- SMTP Not Configured. Simulating Email Notification ---"
+                        echo "To: ${recipient}"
+                        echo "Subject: ${emailSubject}"
+                        echo "Body: ${emailBody}"
+                        echo "--------------------------------------------------------"
+                    }}}}}}
